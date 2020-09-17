@@ -12,9 +12,8 @@ public class MainPanel extends JPanel {
     public void paint(Graphics g) {
         BufferedImage buffer = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_BGR);
 
-
         drawSky(buffer);
-        drawDistrictRect(buffer, 10, 4, 600, 300, 150, getHeight() - 150, new Color(7, 12, 96));
+        //drawDistrictRect(buffer, 10, 4, 600, 300, 150, getHeight() - 150, new Color(7, 12, 96));
         g.drawImage(buffer, 0, 0, null);
         g.dispose();
     }
@@ -40,11 +39,16 @@ public class MainPanel extends JPanel {
     }
 
     public void drawSky(BufferedImage buffer) {
-        buffer.getGraphics().drawImage(new GradientDrawer().gradient(
-                getWidth(), getHeight(), new Color(7, 12, 96),
-                new Color(66, 104, 91), new Point(getWidth() / 2, 0),
-                new Point(getWidth() / 2, getHeight())
-                ), 0, 0, null
-        );
+        GradientDrawer dw = new GradientDrawer();
+        buffer.getGraphics().drawImage(dw.gradient(
+                new Polygon(
+                        new int[] {0, getWidth(), getWidth(), 0},
+                        new int[] {0, 0, getHeight(), getHeight()},
+                        4
+                ),
+                new Point(getWidth() / 2, - getHeight() / 2), new Point(getWidth() / 2,  (int) (1.2 * getHeight())),
+                new float[] {.000005f, .6f, 1f},
+                new Color[]{Color.BLACK, new Color(7, 12, 96), new Color(66, 155, 122)}
+        ), 0, 0, null);
     }
 }
