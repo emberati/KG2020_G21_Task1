@@ -27,12 +27,9 @@ public class GradientDrawer {
      */
     public Image gradient(Polygon polygon, Point point0, Point point1, float[] fractions, Color[] colors) {
 
-        /*
         if (polygon == null || colors == null || fractions == null) {
             throw new NullPointerException("Gradient must have a polygon, colors and color accent points!");
         }
-
-         */
 
         Rectangle bounds = polygon.getBounds();
         final BufferedImage image = new BufferedImage(bounds.width, bounds.height, BufferedImage.TYPE_INT_RGB);
