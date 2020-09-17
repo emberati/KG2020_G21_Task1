@@ -8,7 +8,7 @@ public class MainFrame extends JFrame {
     private Dimension screenDimension;
     private Dimension frameDimension;
 
-    private Drawings0 drawings0;
+    private MainPanel mainPanel;
 
     {
         screenDimension = Toolkit.getDefaultToolkit().getScreenSize();
@@ -25,8 +25,8 @@ public class MainFrame extends JFrame {
     }
 
     private void init() {
-        drawings0 = new Drawings0();
-        add(drawings0);
-        drawings0.setVisible(true);
+        mainPanel = new MainPanel();
+        add(mainPanel);
+        mainPanel.setVisible(true);
     }
 }

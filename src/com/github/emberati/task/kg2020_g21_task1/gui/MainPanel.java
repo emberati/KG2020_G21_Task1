@@ -1,12 +1,12 @@
 package com.github.emberati.task.kg2020_g21_task1.gui;
 
-import com.github.emberati.task.kg2020_g21_task1.ThreeWayGradient;
+import com.github.emberati.task.kg2020_g21_task1.GradientDrawer;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class Drawings0 extends JPanel {
+public class MainPanel extends JPanel {
 
     @Override
     public void paint(Graphics g) {
@@ -40,7 +40,7 @@ public class Drawings0 extends JPanel {
     }
 
     public void drawSky(BufferedImage buffer) {
-        buffer.getGraphics().drawImage(new ThreeWayGradient().gradient(
+        buffer.getGraphics().drawImage(new GradientDrawer().gradient(
                 getWidth(), getHeight(), new Color(7, 12, 96),
                 new Color(66, 104, 91), new Point(getWidth() / 2, 0),
                 new Point(getWidth() / 2, getHeight())
