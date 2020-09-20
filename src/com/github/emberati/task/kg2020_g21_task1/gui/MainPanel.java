@@ -19,13 +19,17 @@ public class MainPanel extends JPanel {
 
 
         drawSky(g2d);
-        //drawDistrictRect(g2d, 40, 4, 400, 200, 500, getHeight() - 150, new Color(52, 56, 56));
+
+        drawDistrictRect(g2d, 40, 2,4, (int) (0.75 * getWidth()), 350, (int) (0.4 * getWidth()), getHeight() - 150, new Color(52, 56, 56));
+        drawDistrictRect(g2d, 60, 24, 4, (int) (0.5 * getWidth()), 200, (int) (0.2 * getWidth()), getHeight() - 150, new Color(52, 56, 56));
+        drawDistrictRect(g2d, 30, 40,4, (int) (0.2 * getWidth()), 300, (int) (0.2 * getWidth()), getHeight() - 150, new Color(52, 56, 56));
+
 
         g.drawImage(buffer, 0, 0, null);
         g.dispose();
     }
 
-    public void drawDistrictRect(Graphics2D g2d, int distanceOy, int houseCount, int x, int y, int width, int height, Color color) {
+    public void drawDistrictRect(Graphics2D g2d, int distanceOy, int distanceOx, int houseCount, int x, int y, int width, int height, Color color) {
 
         final double saturation = 1.2;
         final double brightness = 1.25;
@@ -33,7 +37,8 @@ public class MainPanel extends JPanel {
         for (int i = 0; i < houseCount; i++) {
             drawPanelHouse(g2d, x, y, width, height, color);
             y += distanceOy;
-            x -= 10;
+            width += 17;
+            x -= distanceOx;
 
             color = new Color((int) (color.getRed() * brightness), (int) (color.getGreen() * saturation), (int) (color.getBlue() * saturation));
         }
@@ -42,6 +47,50 @@ public class MainPanel extends JPanel {
     public void drawPanelHouse(Graphics2D g2d, int x, int y, int width, int height, Color color) {
         g2d.setColor(color);
         g2d.fillRect(x, y, width, height);
+
+        int panelCount = 6;
+        int panelWidth = width / panelCount;
+        int panelHeight = (int) (panelWidth * 1.2);
+
+        y += 20;
+        int i = 0;
+        int j;
+        while (i < panelCount) {
+            j = 0;
+            while (j < panelCount) {
+                drawPanelBlock(g2d, x + j * panelWidth, y + i * panelHeight, panelWidth, (int) (panelWidth * 1.2));
+                j++;
+            }
+            i++;
+        }
+    }
+
+    private void drawPanelBlock(Graphics2D g2d, int x, int y, int width, int height) {
+        int windowWidth = (int) (width * 0.5);
+        int windowHeight = (int) (height * 0.5);
+
+        g2d.setStroke(new BasicStroke(3));
+        g2d.setColor(Color.DARK_GRAY);
+        //g2d.drawRect(x, y, width, height);
+
+        drawWindow(g2d, x + (width - windowWidth) / 2, y + (height - windowHeight) / 2, windowWidth, windowHeight);
+    }
+
+    private void drawWindow(Graphics2D g2d, int x, int y, int width, int height) {
+        // Generates window light color
+        Color windowLight;
+        int case_ = (int) Math.round(Math.random());
+        if (case_ == 0) windowLight = new Color(255, 177, 61);
+        else windowLight = new Color(15, 15, 50);
+
+        g2d.setColor(windowLight);
+        g2d.fillRect(x, y, width, height);
+
+        g2d.setStroke(new BasicStroke(3));
+        g2d.setColor(Color.GRAY);
+        g2d.drawRect(x, y ,width, height);
+        g2d.drawLine(x + width / 2, y, x + width/ 2, y + height);
+        g2d.drawLine(x, y + height / 2, x + width, y + height / 2);
     }
 
     private void drawSky(Graphics2D g2d) {
@@ -58,21 +107,11 @@ public class MainPanel extends JPanel {
                 new Color[]{Color.BLACK, new Color(7, 12, 96), new Color(66, 155, 122)}
         ), 0, 0, null);
 
-        /*
-        GradientDrawer dw = new GradientDrawer();
-        g2d.drawImage(dw.gradient(
-                new Polygon(
-                        new int[]{0, getWidth(), getWidth(), 0},
-                        new int[]{0, 0, getHeight(), getHeight()},
-                        4
-                ),
-                new Point(getWidth() / 2, -100), new Point(getWidth() / 2, (int) (1.2 * getHeight())),
-                new float[]{.1f, .3f, .4f, .5f, .7f, 1f},
-                new Color[]{Color.RED, Color.ORANGE, Color.YELLOW, Color.GREEN, Color.CYAN, Color.BLUE}
-        ), 0, 0, null);
-         */
-
         drawStars(g2d);
+
+        // MOON
+        g2d.setColor(Color.WHITE);
+        g2d.fillOval((int) (getWidth() * 0.2), (int) (getHeight() * 0.1), (int) (getWidth() * 0.05), (int) (getWidth() * 0.05));
     }
 
     private void drawStars(Graphics2D g2d) {
@@ -86,7 +125,7 @@ public class MainPanel extends JPanel {
             g2d.fillOval(star.x, star.y, 3, 2);
         }
 
-        drawEllipse(g2d);
+        //drawEllipse(g2d);
     }
 
     void drawEllipse(Graphics2D g)
