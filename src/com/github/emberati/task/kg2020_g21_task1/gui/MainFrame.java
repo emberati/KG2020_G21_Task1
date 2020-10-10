@@ -17,16 +17,19 @@ public class MainFrame extends JFrame {
 
     public MainFrame() throws HeadlessException {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(frameDimension);
-        setLocation(
-                (int) (screenDimension.getWidth() - getWidth()) / 2,
-                (int) (screenDimension.getHeight() - getHeight()) / 2);
+        setPreferredSize(frameDimension);
+        setUndecorated(true);
         init();
+        setLocationRelativeTo(null);
     }
 
     private void init() {
-        mainPanel = new MainPanel();
-        add(mainPanel);
+        mainPanel = new MainPanel(frameDimension);
+        mainPanel.init();
         mainPanel.setVisible(true);
+        //getContentPane().setPreferredSize(frameDimension);
+        //getContentPane().add(mainPanel);
+        add(mainPanel);
+        pack();
     }
 }

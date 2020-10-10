@@ -1,6 +1,6 @@
 package com.github.emberati.task.kg2020_g21_task1.gui;
 
-import com.github.emberati.task.kg2020_g21_task1.GradientDrawer;
+import com.github.emberati.task.kg2020_g21_task1.gui.drawings.Picture;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,125 +11,82 @@ import static java.lang.Math.pow;
 
 public class MainPanel extends JPanel {
 
+    private Picture picture;
+
+    public MainPanel(Dimension dimension) {
+        setSize(dimension);
+        setPreferredSize(dimension);
+    }
+
+    public void init() {
+
+        picture = new Picture(getWidth(), getHeight());
+    }
+
     @Override
     public void paint(Graphics g) {
         BufferedImage buffer = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_BGR);
-
         Graphics2D g2d = buffer.createGraphics();
 
-
-        drawSky(g2d);
-
-        drawDistrictRect(g2d, 40, 2,4, (int) (0.75 * getWidth()), 350, (int) (0.4 * getWidth()), getHeight() - 150, new Color(52, 56, 56));
-        drawDistrictRect(g2d, 60, 24, 4, (int) (0.5 * getWidth()), 200, (int) (0.2 * getWidth()), getHeight() - 150, new Color(52, 56, 56));
-        drawDistrictRect(g2d, 30, 40,4, (int) (0.2 * getWidth()), 300, (int) (0.2 * getWidth()), getHeight() - 150, new Color(52, 56, 56));
-
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        picture.update(getWidth(), getHeight());
+        picture.draw(g2d);
+        /*
+        drawAll(g2d);
+        drawEllipse(g2d);
+        g2d.translate(200, 200);
+        g2d.drawPolygon(superEllipse(200, 2));
+        */
 
         g.drawImage(buffer, 0, 0, null);
         g.dispose();
     }
 
-    public void drawDistrictRect(Graphics2D g2d, int distanceOy, int distanceOx, int houseCount, int x, int y, int width, int height, Color color) {
-
-        final double saturation = 1.2;
-        final double brightness = 1.25;
-
-        for (int i = 0; i < houseCount; i++) {
-            drawPanelHouse(g2d, x, y, width, height, color);
-            y += distanceOy;
-            width += 17;
-            x -= distanceOx;
-
-            color = new Color((int) (color.getRed() * brightness), (int) (color.getGreen() * saturation), (int) (color.getBlue() * saturation));
-        }
+    @Override
+    public void repaint(int x, int y, int width, int height) {
+        super.repaint(x, y, width, height);
     }
 
-    public void drawPanelHouse(Graphics2D g2d, int x, int y, int width, int height, Color color) {
-        g2d.setColor(color);
-        g2d.fillRect(x, y, width, height);
+    private Polygon superEllipse(int radius, double exp) {
+        Polygon superEllipse;
+        int points = (4 + radius) * 4;
+        int[] x = new int[points];
+        int[] y = new int[points];
 
-        int panelCount = 6;
-        int panelWidth = width / panelCount;
-        int panelHeight = (int) (panelWidth * 1.2);
+        int i;
+        for (i = 0; i <= radius; i++) {
+            x[i] = i;
+            y[i] = (int) pow(pow(radius, exp) - pow(i, exp), 1 / exp);
+        }
+        System.out.println(y[0]);
+        //i--;
 
-        y += 20;
-        int i = 0;
         int j;
-        while (i < panelCount) {
-            j = 0;
-            while (j < panelCount) {
-                drawPanelBlock(g2d, x + j * panelWidth, y + i * panelHeight, panelWidth, (int) (panelWidth * 1.2));
-                j++;
-            }
-            i++;
+        for (j = radius; j > 0; j--) {
+            x[i + j] = x[j];
+            y[i + j] = -y[j];
         }
-    }
+        j = radius + 2;
 
-    private void drawPanelBlock(Graphics2D g2d, int x, int y, int width, int height) {
-        int windowWidth = (int) (width * 0.5);
-        int windowHeight = (int) (height * 0.5);
-
-        g2d.setStroke(new BasicStroke(3));
-        g2d.setColor(Color.DARK_GRAY);
-        //g2d.drawRect(x, y, width, height);
-
-        drawWindow(g2d, x + (width - windowWidth) / 2, y + (height - windowHeight) / 2, windowWidth, windowHeight);
-    }
-
-    private void drawWindow(Graphics2D g2d, int x, int y, int width, int height) {
-        // Generates window light color
-        Color windowLight;
-        int case_ = (int) Math.round(Math.random());
-        if (case_ == 0) windowLight = new Color(255, 177, 61);
-        else windowLight = new Color(15, 15, 50);
-
-        g2d.setColor(windowLight);
-        g2d.fillRect(x, y, width, height);
-
-        g2d.setStroke(new BasicStroke(3));
-        g2d.setColor(Color.GRAY);
-        g2d.drawRect(x, y ,width, height);
-        g2d.drawLine(x + width / 2, y, x + width/ 2, y + height);
-        g2d.drawLine(x, y + height / 2, x + width, y + height / 2);
-    }
-
-    private void drawSky(Graphics2D g2d) {
-
-        GradientDrawer dw = new GradientDrawer();
-        g2d.drawImage(dw.gradient(
-                new Polygon(
-                        new int[]{0, getWidth(), getWidth(), 0},
-                        new int[]{0, 0, getHeight(), getHeight()},
-                        4
-                ),
-                new Point(getWidth() / 2, -getHeight() / 2), new Point(getWidth() / 2, (int) (1.2 * getHeight())),
-                new float[]{.000005f, .6f, 1f},
-                new Color[]{Color.BLACK, new Color(7, 12, 96), new Color(66, 155, 122)}
-        ), 0, 0, null);
-
-        drawStars(g2d);
-
-        // MOON
-        g2d.setColor(Color.WHITE);
-        g2d.fillOval((int) (getWidth() * 0.2), (int) (getHeight() * 0.1), (int) (getWidth() * 0.05), (int) (getWidth() * 0.05));
-    }
-
-    private void drawStars(Graphics2D g2d) {
-        //g2d.setColor(Color.YELLOW);
-        final int OFFSET = 50;
-        Point star = new Point();
-        for (int i = 0; i < 100; i++) {
-            star.x = OFFSET + (int) (Math.random() * (getWidth() - 2 * OFFSET));
-            star.y = OFFSET + (int) (Math.random() * (getHeight() - 2 * OFFSET));
-
-            g2d.fillOval(star.x, star.y, 3, 2);
+        int k;
+        for (k = 0; k < radius; k++) {
+            x[i + j + k] = -x[k];
+            y[i + j + k] = -y[k];
+        }
+        j--;
+        j--;
+        int l;
+        for (l = radius; l > 0; l--) {
+            x[i + j + k + l] = -x[l];
+            y[i + j + k + l] = y[l];
         }
 
-        //drawEllipse(g2d);
+
+        superEllipse = new Polygon(x, y, points);
+        return superEllipse;
     }
 
-    void drawEllipse(Graphics2D g)
-    {
+    void drawEllipse(Graphics2D g) {
         /*
          * Скругление
          * < 1 - вогнутый суперэллипс
@@ -139,9 +96,10 @@ public class MainPanel extends JPanel {
         double exp = .3;
 
         // a ~ радиус опис. ок-ти
-        final int a = 10; // a = b
-        double[] points = new double[a + 1];
-        Point[] coordinates;
+        final int a = 100; // a = b
+        double[] points = new double[(a + 1) * 4];
+        int[] cx = new int[(a + 1) * 4];
+        int[] cy = new int[(a + 1) * 4];
 
         Path2D p = new Path2D.Double();
         p.moveTo(a, 0);
@@ -149,8 +107,11 @@ public class MainPanel extends JPanel {
         // calculate first quadrant
         for (int x = a; x >= 0; x--) {
             points[x] = pow(pow(a, exp) - pow(x, exp), 1 / exp); // solve for y
-            p.lineTo(x, -points[x]);
 
+            cy[x] = (int) pow(pow(a, exp) - pow(x, exp), 1 / exp);
+            cx[x] = x;
+
+            p.lineTo(x, -points[x]);
         }
 
         // mirror to others

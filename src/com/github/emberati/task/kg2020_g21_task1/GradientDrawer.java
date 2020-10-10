@@ -3,18 +3,6 @@ package com.github.emberati.task.kg2020_g21_task1;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-/*
-    Муфты, переходники
-    Входная труба
-    Канализационная труба
-    длина труб не более трёх метров
-    развилки
-
-    Через графы
-
-    Проверить валидность трубопроводной системы
- */
-
 public class GradientDrawer {
 
     /**
@@ -26,14 +14,14 @@ public class GradientDrawer {
      * @param colors        Массив цветов градиента
      * @throws NullPointerException     Если один из агрументов равен null
      */
-    public Image gradient(Polygon polygon, Point point0, Point point1, float[] fractions, Color[] colors) {
+    public Image gradient(Polygon polygon, Point point0, Point point1, float[] fractions, Color[] colors, int imageType) {
 
         if (polygon == null || colors == null || fractions == null) {
             throw new NullPointerException("Gradient must have a polygon, colors and color accent points!");
         }
 
         Rectangle bounds = polygon.getBounds();
-        final BufferedImage image = new BufferedImage(bounds.width, bounds.height, BufferedImage.TYPE_INT_RGB);
+        final BufferedImage image = new BufferedImage(bounds.width, bounds.height, imageType);
         final Graphics2D g = image.createGraphics();
         MultipleGradientPaint mp = new LinearGradientPaint(point0, point1, fractions, colors, MultipleGradientPaint.CycleMethod.NO_CYCLE);
 
@@ -51,10 +39,14 @@ public class GradientDrawer {
         if (radius < 0) throw new IllegalArgumentException("Radius must be bigger than 0");
 
         Rectangle bounds = shape.getBounds();
-        final BufferedImage image = new BufferedImage(bounds.width, bounds.height, BufferedImage.TYPE_INT_RGB);
+        final BufferedImage image = new BufferedImage(bounds.width, bounds.height, BufferedImage.TYPE_INT_ARGB);
         final Graphics2D g = image.createGraphics();
         MultipleGradientPaint mp = new RadialGradientPaint(center, radius, fractions, colors);
 
+        g.setPaint(mp);
+        //fixme
+        g.fillOval(300, 300, 200, 200);
+        g.dispose();
         return image;
     }
 }
