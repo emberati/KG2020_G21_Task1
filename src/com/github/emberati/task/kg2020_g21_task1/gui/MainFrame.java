@@ -5,13 +5,9 @@ import java.awt.*;
 
 public class MainFrame extends JFrame {
 
-    private Dimension screenDimension;
-    private Dimension frameDimension;
-
-    private MainPanel mainPanel;
+    private final Dimension frameDimension;
 
     {
-        screenDimension = Toolkit.getDefaultToolkit().getScreenSize();
         frameDimension = new Dimension(800, 600);
     }
 
@@ -24,11 +20,8 @@ public class MainFrame extends JFrame {
     }
 
     private void init() {
-        mainPanel = new MainPanel(frameDimension);
-        mainPanel.init();
+        MainPanel mainPanel = new MainPanel(frameDimension);
         mainPanel.setVisible(true);
-        //getContentPane().setPreferredSize(frameDimension);
-        //getContentPane().add(mainPanel);
         add(mainPanel);
         pack();
     }

@@ -10,30 +10,38 @@ public class PanelHouse implements Drawable {
     private int y;
     private int width;
     private int height;
-    private Color color;
-    private int panels;
+    private final Color color;
+    private final int horPanelCount;
+    private final int verPanelCount;
 
+    private final PanelBlock[][] blocks;
 
-    private PanelBlock[][] blocks;
-
-    public PanelHouse(int x, int y, int width, int height, int panels, Color color) {
+    public PanelHouse(int x, int y, int width, int height, int horPanelCount, int verPanelCount, Color color) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
         this.color = color;
+        this.horPanelCount = horPanelCount;
+        this.verPanelCount = verPanelCount;
 
-        blocks = new PanelBlock[panels][panels];
-        this.panels = panels;
+        final int panelWidth = width / this.horPanelCount;
+        final int panelHeight = height / this.verPanelCount;
+        int offsetTop = (int) (panelHeight * 0.5);
+        y += offsetTop;
+
+        blocks = new PanelBlock[verPanelCount][horPanelCount];
 
         // FILL
         int i = 0;
         int j;
-        while (i < panels) {
+        while (i < verPanelCount) {
             j = 0;
-            while (j < panels) {
-                blocks[i][j] = new PanelBlock(x + j * getRelativePanelWidth(), y + i * getRelativePanelHeight(), getRelativePanelWidth(), getRelativePanelHeight());
-                //drawPanelBlock(g2d, x + j * panelWidth, y + i * panelHeight, );
+            while (j < horPanelCount) {
+                blocks[i][j] = new PanelBlock(
+                        x + j * panelWidth,y + i * panelHeight,
+                        panelWidth, panelHeight
+                );
                 j++;
             }
             i++;
@@ -47,9 +55,9 @@ public class PanelHouse implements Drawable {
 
         int i = 0;
         int j;
-        while (i < panels) {
+        while (i < verPanelCount) {
             j = 0;
-            while (j < panels) {
+            while (j < horPanelCount) {
                 blocks[i][j].draw(g2d);
                 j++;
             }
@@ -58,35 +66,31 @@ public class PanelHouse implements Drawable {
     }
 
     @Override
-    public void update(int width, int height) {
-        this.width = width;
-        this.height = height;
-    }
-
-    void update(int x, int y, int width, int height, Color color) {
+    public void update(int x, int y, int width, int height) {
         this.x = x;
         this.y = y;
-        update(width, height);
-        this.color = color;
+        this.width = width;
+        this.height = height;
+
+        final int panelWidth = width / horPanelCount;
+        final int panelHeight = height / verPanelCount;
+        int offsetTop = (int) (panelHeight * 0.5);
+        y += offsetTop;
 
         int i = 0;
         int j;
-        while (i < panels) {
+        while (i < verPanelCount) {
             j = 0;
-            while (j < panels) {
-                blocks[i][j].update(x + j * getRelativePanelWidth(), y + i * getRelativePanelHeight(), getRelativePanelWidth(), getRelativePanelHeight());
-                //drawPanelBlock(g2d, x + j * panelWidth, y + i * panelHeight, );
+            while (j < horPanelCount) {
+                blocks[i][j].update(
+                        x + j * panelWidth,
+                        y + i * panelHeight,
+                        panelWidth,
+                        panelHeight
+                );
                 j++;
             }
             i++;
         }
-    }
-
-    private int getRelativePanelWidth() {
-        return width / panels;
-    }
-
-    private int getRelativePanelHeight() {
-        return height / panels;
     }
 }

@@ -6,33 +6,43 @@ import java.awt.*;
 
 public class HouseMassive implements Drawable {
 
-    private int x;
-    private int y;
-    private int width;
-    private int height;
-    private final Color color;
-    private final PanelHouse[] houses;
-
+    private final int expansionX;
+    private final int expansionY;
     private final int distanceOx;
     private final int distanceOy;
     private final int houseCount;
+    private final PanelHouse[] houses;
 
-    public HouseMassive(int firstHouseX, int firstHouseY, int width, int height, int houseCount, int distanceOx, int distanceOy, int horPanelCount, Color color) {
-        this.x = firstHouseX;
-        this.y = firstHouseY;
-        this.width = width;
-        this.height = height;
+    public HouseMassive(
+            int x, int y,
+            int firstHouseWidth, int firstHouseHeight,
+            int houseCount, int offsetOx, int offsetOy,
+            int horPanelCount, int verPanelCount,
+            Color color
+    ) {
         this.houseCount = houseCount;
-        this.distanceOx = distanceOx;
-        this.distanceOy = distanceOy;
-        this.color = color;
+        this.distanceOx = offsetOx;
+        this.distanceOy = offsetOy;
 
+        int tempWidth = firstHouseWidth;
+        int tempHeight = firstHouseHeight;
+        expansionX = 10;
+        expansionY = 0;
+        final double saturation = 1.2;
+        final double brightness = 1.25;
         houses = new PanelHouse[houseCount];
         for (int i = 0; i < houseCount; i++) {
             houses[i] = new PanelHouse(
-                    x + i * distanceOx, y + i * distanceOy,
-                    getRelativeHouseWidth(), getRelativeHouseHeight(),
-                    horPanelCount, color);
+                    x + i * offsetOx, y + i * offsetOy,
+                    tempWidth, tempHeight,
+                    horPanelCount, verPanelCount, color);
+            color = new Color(
+                    (int) (color.getRed() * brightness),
+                    (int) (color.getGreen() * saturation),
+                    (int) (color.getBlue() * saturation)
+            );
+            tempWidth += expansionX;
+            tempHeight += expansionY;
         }
     }
 
@@ -44,24 +54,13 @@ public class HouseMassive implements Drawable {
     }
 
     @Override
-    public void update(int width, int height) {
-        this.width = width;
-        this.height = height;
-        Color color = new Color(this.color.getRGB());
-
-        final double saturation = 1.2;
-        final double brightness = 1.25;
+    public void update(int x, int y, int width, int height) {
+        int tempWidth = width;
+        int tempHeight = height;
         for (int i = 0; i < houseCount; i++) {
-            houses[i].update(x + i * distanceOx , y + i * distanceOy, getRelativeHouseWidth(), getRelativeHouseHeight(), color);
-            color = new Color((int) (color.getRed() * brightness), (int) (color.getGreen() * saturation), (int) (color.getBlue() * saturation));
+            houses[i].update(x + i * distanceOx , y + i * distanceOy, tempWidth, tempHeight);
+            tempWidth += expansionX;
+            tempHeight += expansionY;
         }
-    }
-
-    private int getRelativeHouseWidth() {
-        return (int) (width * 0.3);
-    }
-
-    private int getRelativeHouseHeight() {
-        return (int) (height * 0.9);
     }
 }

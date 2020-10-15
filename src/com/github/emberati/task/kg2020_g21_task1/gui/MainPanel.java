@@ -11,15 +11,11 @@ import static java.lang.Math.pow;
 
 public class MainPanel extends JPanel {
 
-    private Picture picture;
+    private final Picture picture;
 
     public MainPanel(Dimension dimension) {
         setSize(dimension);
         setPreferredSize(dimension);
-    }
-
-    public void init() {
-
         picture = new Picture(getWidth(), getHeight());
     }
 
@@ -27,24 +23,13 @@ public class MainPanel extends JPanel {
     public void paint(Graphics g) {
         BufferedImage buffer = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_BGR);
         Graphics2D g2d = buffer.createGraphics();
-
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        picture.update(getWidth(), getHeight());
+
+        picture.update(0, 0, getWidth(), getHeight());
         picture.draw(g2d);
-        /*
-        drawAll(g2d);
-        drawEllipse(g2d);
-        g2d.translate(200, 200);
-        g2d.drawPolygon(superEllipse(200, 2));
-        */
 
         g.drawImage(buffer, 0, 0, null);
         g.dispose();
-    }
-
-    @Override
-    public void repaint(int x, int y, int width, int height) {
-        super.repaint(x, y, width, height);
     }
 
     private Polygon superEllipse(int radius, double exp) {

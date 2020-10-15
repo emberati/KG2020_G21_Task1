@@ -28,7 +28,7 @@ public class Sky implements Drawable {
     }
 
     @Override
-    public void update(int width, int height) {
+    public void update(int x, int y, int width, int height) {
         this.width = width;
         this.height = height;
         moon.update((int) (width * 0.2), (int) (0.1 * height), (int) (0.05 * width), (int) (0.05 * width));

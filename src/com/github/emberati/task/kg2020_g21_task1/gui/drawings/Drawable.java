@@ -6,5 +6,5 @@ public interface Drawable {
 
     void draw(Graphics2D g2d);
 
-    void update(int width, int height);
+    void update(int x, int y, int width, int height);
 }

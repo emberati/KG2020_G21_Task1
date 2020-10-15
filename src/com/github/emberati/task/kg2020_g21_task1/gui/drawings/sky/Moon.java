@@ -19,19 +19,18 @@ public class Moon implements Drawable {
 
     @Override
     public void draw(Graphics2D g2d) {
+        int radius = (int) (width * 0.15);
+        g2d.setColor(new Color(255, 255, 255, 32));
+        g2d.fillOval(x - radius, y - radius, width + 2 * radius, height + 2 * radius);
         g2d.setColor(Color.WHITE);
         g2d.fillOval(x, y,width, height);
     }
 
     @Override
-    public void update(int width, int height) {
-        this.width = width;
-        this.height = height;
-    }
-
     public void update(int x, int y, int width, int height) {
-        update(width, height);
         this.x = x;
         this.y = y;
+        this.width = width;
+        this.height = height;
     }
 }
